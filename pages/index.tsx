@@ -1,29 +1,10 @@
 import { useEffect, useState } from "react";
 import * as THREE from "three";
 import SceneInit from "./lib/SceneInit";
+import { fragmentShader, vertexShader } from "./lib/Shaders"
 
 export default function Home() {  
     let sceneInit, audioContext, audioElement, dataArray, analyser, source;
-
-    useEffect(() => {
-        sceneInit = new SceneInit("myThreeJsCanvas");
-        sceneInit.initScene();
-        sceneInit.animate();
-      
-        // create plane geometry and add to scene
-        const planeMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(64, 64, 64, 64), 
-            new THREE.MeshNormalMaterial({ wireframe: true })
-        );
-
-        planeMesh.rotation.x = -Math.PI / 2 + Math.PI / 4;
-        planeMesh.scale.x = 2;
-        planeMesh.scale.y = 2;
-        planeMesh.scale.z = 2;
-        planeMesh.position.y = 8;
-
-        sceneInit.scene.add(planeMesh);
-    }, []);
 
     // function adapted from SuboptimalEng/gamedex on Github
     // get audio information from the music player
@@ -51,16 +32,63 @@ export default function Home() {
           setupAudioContext();
         }
 
-        const render = () => {
+        const uniforms = {
+            u_time: {
+              type: "f",
+              value: 1.0,
+            },
+            u_amplitude: {
+              type: "f",
+              value: 3.0,
+            },
+            u_data_arr: {
+              type: "float[64]",
+              value: dataArray,
+            },
+            // u_black: { type: "vec3", value: new THREE.Color(0x000000) },
+            // u_white: { type: "vec3", value: new THREE.Color(0xffffff) },
+          };
+      
+        // create custom plane material using shaders
+        // shaders control vertices and colour on plane
+        const planeMaterial = new THREE.ShaderMaterial({
+            uniforms: uniforms, // data passed into the shaders (dataArray, time)
+            vertexShader: vertexShader(),
+            // fragmentShader: fragmentShader(),
+            wireframe: true
+        })
+        const normalPlaneMaterial = new THREE.MeshNormalMaterial({wireframe: true})
+        // create plane and add to scene
+        const planeMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(64, 64, 64, 64), 
+            planeMaterial
+        );
+
+        planeMesh.rotation.x = -Math.PI / 2 + Math.PI / 4;
+        planeMesh.scale.x = 2;
+        planeMesh.scale.y = 2;
+        planeMesh.scale.z = 2;
+        planeMesh.position.y = 8;
+
+        sceneInit.scene.add(planeMesh);
+
+        const render = (time) => {
             // update array with music data every time new frame is rendered
             analyser.getByteFrequencyData(dataArray);
-    
+            uniforms.u_time.value = time;
+            uniforms.u_data_arr.value = dataArray;
+            console.log(uniforms.u_time.value*0.005)
+            
             requestAnimationFrame(render);
-            console.log(dataArray)
         }
-    
         render();
     }
+
+    useEffect(() => {
+        sceneInit = new SceneInit("myThreeJsCanvas");
+        sceneInit.initScene();
+        sceneInit.animate();
+    }, []);
 
     return (
         <div>
