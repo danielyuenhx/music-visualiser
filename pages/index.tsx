@@ -77,7 +77,6 @@ export default function Home() {
             analyser.getByteFrequencyData(dataArray);
             uniforms.u_time.value = time;
             uniforms.u_data_arr.value = dataArray;
-            console.log(uniforms.u_time.value*0.005)
             
             requestAnimationFrame(render);
         }

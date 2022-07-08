@@ -39,9 +39,24 @@
 
 const vertexShader = () => {
     return `
+        varying float x;
+        varying float y;
+        varying float z;
+        varying vec3 vUv;
+        
         uniform float u_time;
+        uniform float u_amplitude;
+        uniform float[64] u_data_arr;
+
         void main() {
-            float z = sin(abs(position.x) + abs(position.y) + u_time * .005);
+            x = round(abs(position.x));
+            y = round(abs(position.y));
+
+            float x_multiplier = (32.0 - x) / 8.0;
+            float y_multiplier = (32.0 - y) / 8.0;
+
+            z = sin(u_data_arr[int(x)] / 50.0 + u_data_arr[int(x)] / 50.0) * u_amplitude;
+            // float z = cos(abs(position.x) + abs(position.y) + u_time * .0025);
             gl_Position = projectionMatrix
                 * modelViewMatrix
                 * vec4(position.x, position.y, z, 1.0);
