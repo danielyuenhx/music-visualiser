@@ -42,7 +42,6 @@ const vertexShader = () => {
         varying float x;
         varying float y;
         varying float z;
-        varying vec3 vUv;
         
         uniform float u_time;
         uniform float u_amplitude;
