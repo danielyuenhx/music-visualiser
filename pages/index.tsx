@@ -27,11 +27,13 @@ export default function Home() {
         dataArray = new Uint8Array(analyser.frequencyBinCount);
     }
 
+    // function that runs when music is played
     const play = async () => {
         if (audioContext == undefined) {
           setupAudioContext();
         }
-
+        
+        // constnat object containing the uniforms
         const uniforms = {
             u_time: {
               type: "f",
