@@ -33,7 +33,7 @@ export default function Home() {
           setupAudioContext();
         }
         
-        // constnat object containing the uniforms
+        // constant object containing the uniforms
         const uniforms = {
             u_time: {
               type: "f",
