@@ -56,8 +56,8 @@ export default function Home() {
         const planeMaterial = new THREE.ShaderMaterial({
             uniforms: uniforms, // data passed into the shaders (dataArray, time)
             vertexShader: vertexShader(),
-            // fragmentShader: fragmentShader(),
-            wireframe: true
+            fragmentShader: fragmentShader(),
+            // wireframe: true
         })
         const normalPlaneMaterial = new THREE.MeshNormalMaterial({wireframe: true})
         // create plane and add to scene

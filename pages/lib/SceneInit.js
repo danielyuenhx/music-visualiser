@@ -37,8 +37,8 @@ export default class SceneInit {
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-        this.stats = Stats();
-        document.body.appendChild(this.stats.dom);
+        // this.stats = Stats();
+        // document.body.appendChild(this.stats.dom);
 
         // ambient light which is for the whole scene
         let ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
@@ -58,7 +58,7 @@ export default class SceneInit {
     animate() {
         window.requestAnimationFrame(this.animate.bind(this));
         this.render();
-        this.stats.update();
+        // this.stats.update();
         this.controls.update();
     }
 
